@@ -1,44 +1,85 @@
-import React from 'react'
-import data from '../../components/minions.json'
-import{makeStyles} from '@material-ui/core/styles'
-import Header from '../../components/Header';
-import { Button } from '@material-ui/core';
+import React, { useState } from 'react'
+import data from './components/minions.json'
+import { makeStyles } from '@material-ui/core/styles'
+import Header from './components/Header';
+import { Button, Grid, Paper } from '@material-ui/core';
+import Modal from './components/Modal';
 
-const useStyles =makeStyles({
-  root:{
-    display:'flex',
-    flexDirection:'column'
-  }
 
-})
+
+const useEstilos = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  geral: {
+    marginTop: '40px'
+  },
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+  titulo: {
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: 'orange'
+  },
+  botao: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+ 
+
+}));
 
 function Home() {
-  const classes= useStyles();
+  const classes = useEstilos();
+  const [isModalVisible, setIsModalVisible] = useState(false)
   return (
-
     <div className={classes.root}>
-      <Header/>
-      <div className="posts">
-        {data.map((a, chave) => {
+      <Header />
+      <Grid className={classes.geral} container spacing={2}>
+        <Grid item xs={12}>
+          <h1 className={classes.titulo}>Minions</h1>
+        </Grid>
+
+        {data.map((a, key) => {
           console.log("data:", a.imagem)
-            return (
-              <>
-                <h3> {a.nome} </h3>
+          return (
+            <Grid container item xs={3} sm={3} justify="center">
+              <Paper className={classes.paper}>
+                <h3 key={a.id}> {a.nome} </h3>
                 <img
-                src={a.imagem}
-                alt="Poster"
-                width={200}
-                height={200}
+                  key={a.id}
+                  src={a.imagem}
+                  alt="Poster"
+                  width={200}
+                  height={200}
                 />
-                <Button variant="contained" color="primary"> Selecionar</Button>
-              </>
-            )
+                <h4>Produto: {a.nome}</h4>
+                <h4>Tamanho: {a.tamanho}</h4>
+                <h4>Coleção: {a.coleção}</h4>
+                <h4> Fornecedor:{a.fornecedor}</h4>
+                <div className={classes.botao}>
+                  {/* //para abrir o modal */}
+                  <Button variant="contained" color="primary" onClick={() => setIsModalVisible(true)}> Reservar</Button>
+                  {/* operador ternário para minimizar a escrita dos if's */}
+                  {isModalVisible ? <Modal onClose={()=>setIsModalVisible(false)}> Produto: {a.nome}</Modal> : null}
+                </div>
+              </Paper>
+            </Grid>
+
+          )
         })}
-      </div>
+
+      </Grid>
     </div>
-  );
+  )
 }
-    
+
+
+
+
 
 
 
